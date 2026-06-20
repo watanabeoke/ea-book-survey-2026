@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินความพร้อม EA & AI ขององค์กร — Watanabe OGI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b1f33;--ink-2:#112c47;--blue:#4a90d9;--blue-soft:#e7f0fa;
+  --maroon:#7a2e2e;--maroon-soft:#f6ecea;--page:#eef1f5;
+  --text:#1a2733;--muted:#5a6b7a;--line:#d8dee6;--line-2:#c6cfdb;
+  --err:#b3261e;--ok:#1f7a55;--gold:#b8860b;
+  --shadow:0 1px 2px rgba(11,31,51,.06),0 10px 30px rgba(11,31,51,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--page);color:var(--text);
+  font-family:'IBM Plex Sans Thai',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.hero{background:linear-gradient(180deg,var(--ink) 0%,var(--ink-2) 100%);color:#fff;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(74,144,217,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(74,144,217,.10) 1px,transparent 1px);
+  background-size:44px 44px;-webkit-mask-image:radial-gradient(120% 90% at 20% 0%,#000 30%,transparent 75%);
+  mask-image:radial-gradient(120% 90% at 20% 0%,#000 30%,transparent 75%);pointer-events:none}
+.hero-inner{position:relative;max-width:760px;margin:0 auto;padding:52px 22px 38px}
+.eyebrow{font-family:'Chakra Petch',sans-serif;letter-spacing:.28em;text-transform:uppercase;font-size:.72rem;font-weight:600;color:var(--blue);margin:0 0 18px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.14;margin:0 0 14px}
+.hero p{color:#b9c8d8;margin:0;max-width:46ch;font-weight:300}
+.hero .author{margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);font-family:'Chakra Petch',sans-serif;font-weight:600;letter-spacing:.04em}
+.wrap{max-width:760px;margin:-22px auto 0;padding:0 22px 80px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:26px 22px}
+.field{margin-bottom:20px}
+.label{display:block;font-weight:600;font-size:.95rem;margin-bottom:7px}
+.req{color:var(--maroon);margin-left:3px}
+.hint{color:var(--muted);font-weight:300;font-size:.85rem}
+.input,.select,.textarea{width:100%;font-family:inherit;font-size:1rem;color:var(--text);background:#fbfcfe;border:1px solid var(--line-2);border-radius:10px;padding:12px 13px;transition:border-color .15s,box-shadow .15s}
+.textarea{min-height:84px;resize:vertical}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.18)}
+.input.invalid{border-color:var(--err)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.section-label{font-family:'Chakra Petch',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-size:.74rem;font-weight:600;color:var(--muted);margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.section-label:first-child{margin-top:0}
+.section-num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--ink);color:#fff;font-size:.72rem;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{display:inline-flex;align-items:center;padding:9px 13px;border:1px solid var(--line-2);border-radius:999px;background:#fbfcfe;font-size:.9rem;cursor:pointer;user-select:none;transition:all .14s}
+.chip:hover{border-color:var(--blue)}
+.chip.on{background:var(--blue-soft);border-color:var(--blue);color:var(--ink);font-weight:500}
+/* book cards */
+.books{display:grid;gap:12px}
+.book{position:relative;display:flex;gap:14px;align-items:flex-start;border:1.5px solid var(--line-2);border-radius:12px;padding:16px;cursor:pointer;background:#fff;transition:all .16s}
+.book:hover{transform:translateY(-1px)}
+.book .spine{width:6px;align-self:stretch;border-radius:4px;background:var(--line-2);flex:none}
+.book .b-title{font-weight:600;line-height:1.3}
+.book .b-sub{color:var(--muted);font-size:.85rem;font-weight:300;margin-top:3px;display:block}
+.book .tick{margin-left:auto;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line-2);flex:none;display:grid;place-items:center;color:#fff;font-size:.8rem}
+.book input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.book.navy.on{border-color:var(--blue);background:var(--blue-soft)}
+.book.navy.on .spine,.book.navy.on .tick{background:var(--blue);border-color:var(--blue)}
+.book.maroon.on{border-color:var(--maroon);background:var(--maroon-soft)}
+.book.maroon.on .spine,.book.maroon.on .tick{background:var(--maroon);border-color:var(--maroon)}
+.book.neutral.on{border-color:var(--ink);background:#eef1f5}
+.book.neutral.on .spine,.book.neutral.on .tick{background:var(--ink);border-color:var(--ink)}
+
+/* ===== assessment ===== */
+.assess-intro{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:.86rem;color:var(--muted);margin-bottom:18px}
+.assess-intro b{color:var(--text)}
+.dim{border:1px solid var(--line);border-radius:12px;padding:15px 16px;margin-bottom:13px;background:#fff}
+.dim.answered{border-color:var(--blue);background:linear-gradient(0deg,#fbfdff,#fff)}
+.dim-head{display:flex;gap:10px;align-items:baseline;margin-bottom:4px}
+.dim-no{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--blue)}
+.dim-name{font-weight:600}
+.dim-en{color:var(--muted);font-size:.8rem;font-weight:400}
+.dim-q{font-size:.88rem;color:var(--muted);margin:0 0 11px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.sbtn{border:1.5px solid var(--line-2);background:#fbfcfe;border-radius:9px;padding:9px 4px;cursor:pointer;text-align:center;transition:all .13s;font-family:inherit}
+.sbtn .n{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text);display:block}
+.sbtn .t{font-size:.66rem;color:var(--muted);line-height:1.25;display:block;margin-top:2px}
+.sbtn:hover{border-color:var(--blue)}
+.sbtn.on{background:var(--blue);border-color:var(--blue)}
+.sbtn.on .n,.sbtn.on .t{color:#fff}
+
+/* radar live box */
+.radar-box{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:center;background:var(--ink);
+  border-radius:14px;padding:18px;color:#fff;margin:8px 0 4px}
+.radar-box .meta h4{font-family:'Chakra Petch',sans-serif;margin:0 0 4px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:#8fb4dd}
+.radar-box .score{font-family:'Chakra Petch',sans-serif;font-size:2.6rem;font-weight:700;line-height:1}
+.radar-box .score small{font-size:1rem;color:#9fb6cc;font-weight:500}
+.lvlbadge{display:inline-block;margin-top:10px;padding:5px 13px;border-radius:999px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.85rem}
+.radar-box .prog{color:#9fb6cc;font-size:.8rem;margin-top:10px}
+@media(max-width:560px){.radar-box{grid-template-columns:1fr}.radar-box svg{max-width:280px;margin:0 auto}}
+
+/* capability */
+.caps{display:grid;gap:10px}
+.cap{position:relative;display:flex;gap:13px;align-items:flex-start;border:1.5px solid var(--line-2);border-radius:12px;padding:14px;cursor:pointer;transition:all .15s}
+.cap:hover{border-color:var(--line)}
+.cap .lv{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.78rem;color:#fff;background:var(--muted);border-radius:7px;padding:4px 9px;flex:none}
+.cap .nm{font-weight:600}.cap .ds{color:var(--muted);font-size:.84rem;display:block;margin-top:2px}
+.cap.on{border-color:var(--blue);background:var(--blue-soft)}
+.cap.on .lv{background:var(--blue)}
+.cap input{position:absolute;opacity:0}
+
+.consent{display:flex;gap:11px;align-items:flex-start;background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:28px}
+.consent input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--blue)}
+.consent label{font-size:.9rem;color:var(--muted)}
+.btn{width:100%;margin-top:24px;background:var(--ink);color:#fff;font-family:'Chakra Petch',sans-serif;font-weight:600;letter-spacing:.03em;font-size:1.02rem;border:none;border-radius:11px;padding:15px;cursor:pointer}
+.btn:hover{background:var(--ink-2)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.form-error{margin-top:16px;background:#fdecea;border:1px solid #f3c4bf;color:var(--err);border-radius:10px;padding:11px 13px;font-size:.9rem;display:none}
+
+/* result screen */
+#result{display:none}
+.res-hero{background:linear-gradient(180deg,var(--ink),var(--ink-2));color:#fff;text-align:center;padding:46px 22px 30px}
+.res-hero .badge{width:60px;height:60px;border-radius:50%;background:rgba(74,144,217,.2);color:#9fd0ff;display:grid;place-items:center;margin:0 auto 14px;font-size:1.7rem}
+.res-hero h2{font-family:'Chakra Petch',sans-serif;margin:0 0 6px}
+.res-hero p{color:#b9c8d8;margin:0}
+.res-card{max-width:760px;margin:-20px auto 0;padding:0 22px 70px}
+.res-grid{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:center}
+@media(max-width:620px){.res-grid{grid-template-columns:1fr}}
+.res-score{font-family:'Chakra Petch',sans-serif;font-size:3.2rem;font-weight:700;color:var(--ink);line-height:1}
+.res-score small{font-size:1.1rem;color:var(--muted)}
+.res-lvl{display:inline-block;margin:8px 0;padding:6px 16px;border-radius:999px;font-family:'Chakra Petch',sans-serif;font-weight:600}
+.res-row{margin:14px 0;font-size:.92rem}
+.res-row .k{font-family:'Chakra Petch',sans-serif;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.res-note{font-size:.86rem;color:var(--muted);max-width:760px;margin:18px auto 0;padding:0 22px;text-align:center}
+</style>
+</head>
+<body>
+
+<div id="formView">
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">EA &amp; AI Readiness Assessment</p>
+      <h1>แบบประเมินความพร้อมด้าน EA และ AI ขององค์กร</h1>
+      <p>ประเมิน 6 มิติของสถาปัตยกรรมองค์กรและการนำ AI ไปใช้ พร้อมเห็นผลเป็น Spider Chart และระดับความพร้อมทันที ก่อนส่งข้อมูลลงทะเบียน</p>
+      <div class="author">Watanabe OGI · Enterprise AI Architecture Practice</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card">
+
+      <!-- ===== 1. รายละเอียดผู้ตอบ ===== -->
+      <div class="section-label"><span class="section-num">1</span> รายละเอียดผู้ตอบ</div>
+      <div class="field"><label class="label" for="full_name">ชื่อผู้ตอบ<span class="req">*</span></label>
+        <input class="input" id="full_name" placeholder="ชื่อ – นามสกุล"></div>
+      <div class="two">
+        <div class="field"><label class="label" for="organization">หน่วยงาน / องค์กร</label>
+          <input class="input" id="organization" placeholder="ชื่อองค์กร"></div>
+        <div class="field"><label class="label" for="job_role">ตำแหน่ง / บทบาท</label>
+          <input class="input" id="job_role" placeholder="เช่น CIO, EA, ผู้บริหาร"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label class="label" for="email">อีเมล<span class="req">*</span></label>
+          <input class="input" id="email" type="email" placeholder="name@example.com"></div>
+        <div class="field"><label class="label" for="phone">เบอร์โทร <span class="hint">(ไม่บังคับ)</span></label>
+          <input class="input" id="phone" inputmode="tel" placeholder="08x-xxx-xxxx"></div>
+      </div>
+
+      <!-- ===== 2. ความต้องการ / บริบท ===== -->
+      <div class="section-label"><span class="section-num">2</span> ความเชี่ยวชาญ และความต้องการ</div>
+      <div class="two">
+        <div class="field"><label class="label" for="expertise">สาขาที่เชี่ยวชาญ</label>
+          <select class="select" id="expertise" onchange="document.getElementById('otherWrap').style.display=this.value==='อื่นๆ'?'block':'none'">
+            <option value="">— เลือก —</option>
+            <option>AI / Machine Learning</option>
+            <option>Enterprise Architecture (EA)</option>
+            <option>สาธารณสุข / Public Health</option>
+            <option>Software / Data Engineering</option>
+            <option>Data / Analytics</option>
+            <option>บริหาร / Management</option>
+            <option>วิชาการ / อาจารย์ / นักวิจัย</option>
+            <option>อื่นๆ</option>
+          </select></div>
+        <div class="field"><label class="label" for="experience_level">ประสบการณ์ในสายงาน</label>
+          <select class="select" id="experience_level">
+            <option value="">— เลือก —</option>
+            <option>น้อยกว่า 1 ปี</option>
+            <option>1–3 ปี</option>
+            <option>3–5 ปี</option>
+            <option>5–10 ปี</option>
+            <option>มากกว่า 10 ปี</option>
+          </select></div>
+      </div>
+      <div class="field" id="otherWrap" style="display:none">
+        <label class="label" for="expertise_other">ระบุสาขา</label>
+        <input class="input" id="expertise_other" placeholder="โปรดระบุ"></div>
+      <div class="field"><label class="label">ประเด็นที่องค์กรสนใจ / อยากพัฒนา <span class="hint">(เลือกได้หลายข้อ)</span></label>
+        <div class="chips" id="interests">
+          <span class="chip">Business Architecture</span>
+          <span class="chip">Data Governance / ธรรมาภิบาลข้อมูล</span>
+          <span class="chip">ระบบงาน / Application Integration</span>
+          <span class="chip">โครงสร้างพื้นฐาน / Cloud</span>
+          <span class="chip">AI Adoption</span>
+          <span class="chip">การบริหารการเปลี่ยนแปลง</span>
+        </div></div>
+      <div class="field"><label class="label" for="problems">โจทย์ / ความท้าทายที่อยากให้ EA หรือ AI ช่วย <span class="hint">(ไม่บังคับ)</span></label>
+        <textarea class="textarea" id="problems" placeholder="เล่าปัญหาหลักขององค์กรในมุม EA/AI"></textarea></div>
+
+      <!-- ===== 3. การประเมิน ===== -->
+      <div class="section-label"><span class="section-num">3</span> แบบประเมิน EA &amp; AI Readiness</div>
+      <div class="assess-intro">ให้คะแนนแต่ละมิติจาก <b>1–5</b> ตามสถานะปัจจุบันขององค์กร
+        (<b>1</b> ยังไม่มี · <b>2</b> บางส่วน · <b>3</b> หลายหน่วยงาน · <b>4</b> ระดับองค์กร · <b>5</b> ครบถ้วนทั่วทั้งองค์กร)
+        — กราฟด้านล่างจะอัปเดตตามที่ท่านเลือก</div>
+
+      <div id="dims"></div>
+
+      <div class="radar-box">
+        <div id="liveRadar"></div>
+        <div class="meta">
+          <h4>คะแนนรวม</h4>
+          <div class="score"><span id="liveScore">0</span><small> / 30</small></div>
+          <div><span class="lvlbadge" id="liveLevel" style="background:#33485e;color:#cfe0f0">ยังประเมินไม่ครบ</span></div>
+          <div class="prog" id="liveProg">ตอบแล้ว 0 / 6 มิติ</div>
+        </div>
+      </div>
+
+      <!-- AI capability -->
+      <div class="field" style="margin-top:26px"><label class="label">ระดับความสามารถ AI ขององค์กร <span class="hint">(เลือก 1 ข้อ)</span></label>
+        <div class="caps" id="caps">
+          <label class="cap" data-v="Level 1: AI Assistant"><span class="lv">L1</span>
+            <span><span class="nm">AI Assistant</span><span class="ds">ใช้ AI ค้นหาข้อมูล สรุปเนื้อหา แปลภาษา หรือช่วยร่างเอกสาร</span></span>
+            <input type="radio" name="cap"></label>
+          <label class="cap" data-v="Level 2: Knowledge AI"><span class="lv">L2</span>
+            <span><span class="nm">Knowledge AI</span><span class="ds">AI อ้างอิงข้อมูล เอกสาร ระเบียบ หรือองค์ความรู้ของหน่วยงานได้</span></span>
+            <input type="radio" name="cap"></label>
+          <label class="cap" data-v="Level 3: AI-Powered Organization"><span class="lv">L3</span>
+            <span><span class="nm">AI-Powered Organization</span><span class="ds">AI เชื่อมต่อระบบงาน/กระบวนการ และช่วยดำเนินงานบางส่วนอัตโนมัติ</span></span>
+            <input type="radio" name="cap"></label>
+        </div></div>
+
+      <!-- ===== 4. ขอรับหนังสือ ===== -->
+      <div class="section-label"><span class="section-num">4</span> ขอรับหนังสือ</div>
+      <div class="field"><label class="label">หนังสือที่สนใจขอรับ <span class="hint">(เลือกได้หลายเล่ม)</span></label>
+        <div class="books" id="books">
+          <div class="book navy" data-title="Prompt → Context → Harness Engineering">
+            <span class="spine"></span>
+            <span><span class="b-title">Prompt → Context → Harness Engineering</span>
+            <span class="b-sub">ตำราสถาปัตยกรรม AI ระดับองค์กร · Thai / English</span></span>
+            <span class="tick"></span></div>
+          <div class="book maroon" data-title="นวัตกรรม ๒๐๒๖ · ความรู้ ฉบับนักเดินทาง">
+            <span class="spine"></span>
+            <span><span class="b-title">นวัตกรรม ๒๐๒๖ · ความรู้ ฉบับนักเดินทาง</span>
+            <span class="b-sub">Innovation 2026 — A Traveler's Field Guide</span></span>
+            <span class="tick"></span></div>
+          <div class="book neutral" data-title="เล่มถัดไป / ผลงานชุดอื่น">
+            <span class="spine"></span>
+            <span><span class="b-title">เล่มถัดไป / ผลงานชุดอื่น</span>
+            <span class="b-sub">สนใจติดตามหนังสือเล่มต่อไปของ Watanabe OGI</span></span>
+            <span class="tick"></span></div>
+        </div></div>
+      <div class="field"><label class="label">รูปแบบที่ต้องการ <span class="hint">(เลือกได้หลายข้อ)</span></label>
+        <div class="chips" id="format_pref">
+          <span class="chip">เล่มจริง (Print)</span>
+          <span class="chip">eBook / PDF</span>
+          <span class="chip">อบรม / Workshop</span>
+          <span class="chip">บรรยาย / Talk</span>
+        </div></div>
+
+      <div class="consent">
+        <input type="checkbox" id="consent">
+        <label for="consent">ข้าพเจ้ายินยอมให้เก็บและใช้ข้อมูลข้างต้นเพื่อการติดต่อกลับและจัดทำรายงานความพร้อม ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)<span class="req">*</span></label>
+      </div>
+
+      <div class="form-error" id="err"></div>
+      <button class="btn" id="submitBtn">ส่งข้อมูลลงทะเบียน &amp; ดูผลประเมิน</button>
+    </div>
+  </main>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="result">
+  <div class="res-hero">
+    <div class="badge">✓</div>
+    <h2>บันทึกผลสำเร็จ</h2>
+    <p>ขอบคุณที่ร่วมประเมิน — สรุปผลความพร้อมขององค์กรท่าน</p>
+  </div>
+  <div class="res-card">
+    <div class="res-grid">
+      <div id="resRadar" style="text-align:center"></div>
+      <div>
+        <div class="res-score"><span id="resScore">0</span><small> / 30</small></div>
+        <div class="res-lvl" id="resLevel"></div>
+        <div class="res-row"><span class="k">AI Capability</span><span id="resCap">—</span></div>
+        <div class="res-row"><span class="k">จุดแข็ง (มิติคะแนนสูงสุด)</span><span id="resStrong">—</span></div>
+        <div class="res-row"><span class="k">ควรพัฒนา (มิติคะแนนต่ำสุด)</span><span id="resWeak">—</span></div>
+      </div>
+    </div>
+    <p class="res-note" id="resNote"></p>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://nluzvdjoupuxvubuqnhx.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sdXp2ZGpvdXB1eHZ1YnVxbmh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMjUwODgsImV4cCI6MjA5NjYwMTA4OH0.5jFEzaMymQ3SUvGFI0TT6ZzuydBuWde6XgVBJsvP26A';
+
+const DIMS = [
+  {id:'ea_business', name:'กระบวนการธุรกิจ', en:'Business Architecture', axis:'ธุรกิจ',
+    q:'มีการกำหนดและบริหารกระบวนการทำงานหลักที่เชื่อมโยงกับยุทธศาสตร์องค์กรชัดเจนเพียงใด',
+    o:['ยังไม่มีมาตรฐานร่วม','กำหนดในบางหน่วยงาน','มีมาตรฐานหลายหน่วยงาน','เชื่อมโยงระดับองค์กร','บูรณาการกับยุทธศาสตร์ทั่วองค์กร']},
+  {id:'ea_data', name:'สถาปัตยกรรมข้อมูล', en:'Data Architecture', axis:'ข้อมูล',
+    q:'ข้อมูลสำคัญเข้าถึง ใช้งาน และแลกเปลี่ยนร่วมกันระหว่างหน่วยงานได้เพียงใด',
+    o:['แยกเก็บตามหน่วยงาน','แลกเปลี่ยนบางส่วน','มีมาตรฐานข้อมูลร่วม','เชื่อมโยงใช้ร่วมได้ส่วนใหญ่','บริหารข้อมูลร่วมทั่วองค์กร']},
+  {id:'ea_application', name:'สถาปัตยกรรมระบบงาน', en:'Application Architecture', axis:'ระบบงาน',
+    q:'ระบบงานต่าง ๆ เชื่อมต่อและทำงานร่วมกันได้เพียงใด',
+    o:['ระบบแยกจากกัน','เชื่อมต่อบางระบบ','ระบบสำคัญเชื่อมต่อได้','แลกเปลี่ยนข้อมูลส่วนใหญ่','เชื่อมโยงทั่วทั้งองค์กร']},
+  {id:'ea_technology', name:'สถาปัตยกรรมเทคโนโลยี', en:'Technology Architecture', axis:'เทคโนโลยี',
+    q:'โครงสร้างพื้นฐานรองรับการใช้งานและขยายระบบดิจิทัล/AI ได้เพียงใด',
+    o:['ไม่มีโครงสร้างชัดเจน','รองรับบางระบบ','มีมาตรฐานกลาง','มีแพลตฟอร์มกลางหลายหน่วยงาน','ขยายได้ทั่วองค์กร']},
+  {id:'ea_governance', name:'ธรรมาภิบาล', en:'Governance', axis:'ธรรมาภิบาล',
+    q:'มีนโยบาย มาตรฐาน และกลไกกำกับดูแลข้อมูล/เทคโนโลยี/AI ชัดเจนเพียงใด',
+    o:['ยังไม่มีแนวทาง','มีแนวทางเบื้องต้น','มีนโยบายเป็นทางการ','กำกับและติดตามต่อเนื่อง','มีกรอบธรรมาภิบาล+ความเสี่ยงครบ']},
+  {id:'ea_ai_adoption', name:'การนำ AI ไปใช้', en:'AI Adoption', axis:'AI',
+    q:'ปัจจุบันนำ AI ไปใช้ในการปฏิบัติงานหรือการตัดสินใจมากน้อยเพียงใด',
+    o:['ยังไม่ใช้ AI','ทดลองบางกรณี','ใช้หลายหน่วยงาน','ใช้ในกระบวนการสำคัญ','เป็นส่วนหนึ่งทั่วองค์กร']},
+];
+const scores = {}; DIMS.forEach(d=>scores[d.id]=0);
+
+const $ = id => document.getElementById(id);
+
+// build dimension cards
+$('dims').innerHTML = DIMS.map((d,i)=>`
+  <div class="dim" id="card_${d.id}">
+    <div class="dim-head"><span class="dim-no">${i+1}</span><span class="dim-name">${d.name}</span><span class="dim-en">· ${d.en}</span></div>
+    <p class="dim-q">${d.q}</p>
+    <div class="scale">${[1,2,3,4,5].map(n=>
+      `<button type="button" class="sbtn" title="${d.o[n-1]}" onclick="pick('${d.id}',${n})" id="b_${d.id}_${n}">
+        <span class="n">${n}</span><span class="t">${d.o[n-1]}</span></button>`).join('')}</div>
+  </div>`).join('');
+
+function levelOf(total){
+  if(total>=25) return {name:'Enterprise Ready', color:'#1f7a55', soft:'#e4f3ec'};
+  if(total>=19) return {name:'Modular', color:'#2e6db3', soft:'#e7f0fa'};
+  if(total>=13) return {name:'Standardization', color:'#b8860b', soft:'#f7efda'};
+  return {name:'Silo', color:'#7a2e2e', soft:'#f6ecea'};
+}
+
+function pick(id,n){
+  scores[id]=n;
+  DIMS.forEach(d=>{ for(let k=1;k<=5;k++){ $('b_'+d.id+'_'+k).classList.toggle('on', scores[d.id]===k); }});
+  $('card_'+id).classList.add('answered');
+  update();
+}
+
+function radarSVG(sc, size, light){
+  const cx=size/2, cy=size/2*0.92, R=size*0.34;
+  const stroke = light? 'rgba(11,31,51,.12)' : 'rgba(255,255,255,.18)';
+  const txt = light? '#5a6b7a' : '#cfe0f0';
+  const pt=(val,i)=>{const a=(-90+60*i)*Math.PI/180; const r=R*val/5;
+    return [cx+r*Math.cos(a), cy+r*Math.sin(a)];};
+  let rings='';
+  for(let ring=1;ring<=5;ring++){
+    const pts=DIMS.map((_,i)=>pt(ring,i).join(',')).join(' ');
+    rings+=`<polygon points="${pts}" fill="none" stroke="${stroke}" stroke-width="1"/>`;
+  }
+  let axes='',labels='';
+  DIMS.forEach((d,i)=>{
+    const [x,y]=pt(5,i);
+    axes+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${stroke}" stroke-width="1"/>`;
+    const [lx,ly]=pt(6.05,i);
+    const anchor = Math.abs(lx-cx)<6?'middle':(lx>cx?'start':'end');
+    labels+=`<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle" font-size="${size*0.038}" fill="${txt}" font-family="IBM Plex Sans Thai">${d.axis}</text>`;
+  });
+  const dataPts=DIMS.map((d,i)=>pt(scores[d.id]||0,i));
+  const poly=dataPts.map(p=>p.join(',')).join(' ');
+  const dots=dataPts.map((p,i)=> (scores[DIMS[i].id]? `<circle cx="${p[0]}" cy="${p[1]}" r="${size*0.012}" fill="#4a90d9"/>`:'')).join('');
+  return `<svg viewBox="0 0 ${size} ${size}" width="100%" style="max-width:${size}px;display:block;margin:0 auto">
+    ${rings}${axes}
+    <polygon points="${poly}" fill="rgba(74,144,217,.30)" stroke="#4a90d9" stroke-width="2"/>
+    ${dots}${labels}</svg>`;
+}
+
+function update(){
+  const answered = DIMS.filter(d=>scores[d.id]>0).length;
+  const total = DIMS.reduce((s,d)=>s+(scores[d.id]||0),0);
+  $('liveRadar').innerHTML = radarSVG(scores,210,false);
+  $('liveScore').textContent = total;
+  $('liveProg').textContent = 'ตอบแล้ว '+answered+' / 6 มิติ';
+  const badge=$('liveLevel');
+  if(answered<6){ badge.textContent='ยังประเมินไม่ครบ'; badge.style.background='#33485e'; badge.style.color='#cfe0f0'; }
+  else { const L=levelOf(total); badge.textContent=L.name; badge.style.background=L.color; badge.style.color='#fff'; }
+}
+update();
+
+// chips & capability
+document.querySelectorAll('#interests .chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+document.querySelectorAll('#format_pref .chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+document.querySelectorAll('#books .book').forEach(b=>b.addEventListener('click',()=>{
+  b.classList.toggle('on');
+  b.querySelector('.tick').textContent = b.classList.contains('on')?'✓':'';
+}));
+let capVal='';
+document.querySelectorAll('#caps .cap').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('#caps .cap').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); capVal=c.dataset.v; c.querySelector('input').checked=true;
+}));
+
+const picked = sel => [...document.querySelectorAll(sel+' .on')].map(el=>el.dataset.title||el.textContent.trim());
+
+$('submitBtn').addEventListener('click', async ()=>{
+  const err=$('err'); err.style.display='none';
+  const full_name=$('full_name').value.trim();
+  const email=$('email').value.trim();
+  const consent=$('consent').checked;
+  const answered=DIMS.filter(d=>scores[d.id]>0).length;
+  $('full_name').classList.toggle('invalid',!full_name);
+  $('email').classList.toggle('invalid',!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+
+  if(!full_name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !consent){
+    err.textContent='กรุณากรอกชื่อ, อีเมลให้ถูกต้อง และยินยอม PDPA'; err.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'}); return;
+  }
+  if(answered<6){ err.textContent='กรุณาประเมินให้ครบทั้ง 6 มิติ (เหลืออีก '+(6-answered)+' มิติ)'; err.style.display='block'; return; }
+  if(!capVal){ err.textContent='กรุณาเลือกระดับความสามารถ AI ขององค์กร'; err.style.display='block'; return; }
+
+  const total=DIMS.reduce((s,d)=>s+scores[d.id],0);
+  const L=levelOf(total);
+  const payload={
+    full_name, email,
+    phone:$('phone').value.trim()||null,
+    organization:$('organization').value.trim()||null,
+    job_role:$('job_role').value.trim()||null,
+    expertise:$('expertise').value||null,
+    expertise_other:$('expertise').value==='อื่นๆ'?($('expertise_other').value.trim()||null):null,
+    experience_level:$('experience_level').value||null,
+    interests:picked('#interests'),
+    books_interested:picked('#books'),
+    format_pref:picked('#format_pref'),
+    problems:$('problems').value.trim()||null,
+    ea_business:scores.ea_business, ea_data:scores.ea_data, ea_application:scores.ea_application,
+    ea_technology:scores.ea_technology, ea_governance:scores.ea_governance, ea_ai_adoption:scores.ea_ai_adoption,
+    ea_total:total, ea_level:L.name, ai_capability_level:capVal,
+    assessment_date:new Date().toISOString().slice(0,10),
+    consent:true
+  };
+
+  const btn=$('submitBtn'); btn.disabled=true; btn.textContent='กำลังส่ง…';
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/responses',{
+      method:'POST',
+      headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok){ throw new Error(res.status+' '+await res.text()); }
+    showResult(total,L);
+  }catch(e){
+    err.textContent='ส่งไม่สำเร็จ: '+e.message+' — (ผู้ดูแล: รัน migration-ea-columns.sql เพิ่มคอลัมน์แล้วหรือยัง)';
+    err.style.display='block'; btn.disabled=false; btn.textContent='ส่งข้อมูลลงทะเบียน & ดูผลประเมิน';
+  }
+});
+
+function showResult(total,L){
+  const sorted=[...DIMS].sort((a,b)=>scores[b.id]-scores[a.id]);
+  const maxv=scores[sorted[0].id], minv=scores[sorted[sorted.length-1].id];
+  const strong=DIMS.filter(d=>scores[d.id]===maxv).map(d=>d.name).join(', ');
+  const weak=DIMS.filter(d=>scores[d.id]===minv).map(d=>d.name).join(', ');
+  $('formView').style.display='none'; $('result').style.display='block';
+  $('resRadar').innerHTML=radarSVG(scores,300,true);
+  $('resScore').textContent=total;
+  const rl=$('resLevel'); rl.textContent=L.name; rl.style.background=L.soft; rl.style.color=L.color;
+  $('resCap').textContent=capVal;
+  $('resStrong').textContent=strong+' ('+maxv+'/5)';
+  $('resWeak').textContent=weak+' ('+minv+'/5)';
+  const notes={
+    'Silo':'การทำงานยังแยกส่วน ควรเริ่มจากตั้งเจ้าของงาน EA/AI Governance และเลือก use case นำร่อง',
+    'Standardization':'เริ่มมีมาตรฐานกลาง ควรเร่งสร้างมาตรฐานข้อมูลและ Knowledge Base ให้ครบ',
+    'Modular':'ระบบเชื่อมโยงดีแล้ว ควรนำ AI เข้าสู่ workflow สำคัญและวัดผลด้วย KPI/Risk',
+    'Enterprise Ready':'องค์กรพร้อมขยาย AI ระดับองค์กร เน้นบริหารความเสี่ยงและขยายผลต่อเนื่อง'
+  };
+  $('resNote').textContent='ระดับ '+L.name+': '+notes[L.name];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
